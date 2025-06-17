@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import emailjs from '@emailjs/browser';
 
 const universities = [
   'International University of Malaya-Wales',
@@ -43,6 +44,39 @@ const courses = [
 ];
 
 const Contact = () => {
+  const form = useRef();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus({ type: '', message: '' });
+
+    emailjs.sendForm(
+      'service_iree9qm', // Replace with your EmailJS service ID
+      'template_sfehvwr', // Replace with your EmailJS template ID
+      form.current,
+      'M9xo2qjt017o9GVsT' // Replace with your EmailJS public key
+    )
+      .then((result) => {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Message sent successfully! We will get back to you soon.'
+        });
+        form.current.reset();
+      })
+      .catch((error) => {
+        setSubmitStatus({
+          type: 'error',
+          message: 'Failed to send message. Please try again later.'
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
+
   return (
     <div id="contact-section" className="container py-5">
       <div className="row justify-content-center">
@@ -56,7 +90,8 @@ const Contact = () => {
               <i className="fa-brands fa-whatsapp me-2" style={{ color: '#25D366' }}></i>WhatsApp: <a href="https://wa.me/+60182356059" style={{ color: '#004B87', textDecoration: 'underline' }}>+60182356059</a>
             </p>
             <p className="text-center mb-4" style={{ color: '#004B87', fontWeight: 500 }}>
-              {/* <i className="fa-solid fa-envelope me-2" style={{ color: '#004B87' }}></i>Email: <a href="mailto:info@edulinkzambia.co.zm" style={{ color: '#004B87', textDecoration: 'underline' }}>info@edulinkzambia.co.zm</a> */}
+              {/* <i className="fa-solid fa-envelope me-2" style={{ color: '#004B87' }}></i>Email:  */}
+              <a href="mailto:mfit0353@gmail.com" style={{ color: '#004B87', textDecoration: 'underline' }}></a>
             </p>
             
             {/* Social Media Icons */}
@@ -82,15 +117,41 @@ const Contact = () => {
                 <i className="fab fa-whatsapp"></i>
               </a>
             </div>
-            <form className="mt-2">
+
+            {submitStatus.message && (
+              <div className={`alert alert-${submitStatus.type === 'success' ? 'success' : 'danger'} mb-4`} role="alert">
+                {submitStatus.message}
+              </div>
+            )}
+
+            <form ref={form} onSubmit={sendEmail} className="mt-2">
               <div className="mb-3">
-                <input type="text" className="form-control" placeholder="Name" style={{ borderRadius: 10 }} />
+                <input 
+                  type="text" 
+                  name="user_name" 
+                  className="form-control" 
+                  placeholder="Name" 
+                  style={{ borderRadius: 10 }} 
+                  required
+                />
               </div>
               <div className="mb-3">
-                <input type="email" className="form-control" placeholder="Email" style={{ borderRadius: 10 }} />
+                <input 
+                  type="email" 
+                  name="user_email" 
+                  className="form-control" 
+                  placeholder="Email" 
+                  style={{ borderRadius: 10 }} 
+                  required
+                />
               </div>
               <div className="mb-3">
-                <select className="form-select" style={{ borderRadius: 10 }} defaultValue="">
+                <select 
+                  name="university" 
+                  className="form-select" 
+                  style={{ borderRadius: 10 }} 
+                  required
+                >
                   <option value="" disabled>Select University in Kuala Lumpur</option>
                   {universities.map((uni, idx) => (
                     <option key={idx} value={uni}>{uni}</option>
@@ -98,7 +159,12 @@ const Contact = () => {
                 </select>
               </div>
               <div className="mb-3">
-                <select className="form-select" style={{ borderRadius: 10 }} defaultValue="">
+                <select 
+                  name="course" 
+                  className="form-select" 
+                  style={{ borderRadius: 10 }} 
+                  required
+                >
                   <option value="" disabled>Select Field of Study</option>
                   {courses.map((course, idx) => (
                     <option key={idx} value={course}>{course}</option>
@@ -106,10 +172,29 @@ const Contact = () => {
                 </select>
               </div>
               <div className="mb-3">
-                <textarea className="form-control" placeholder="Message" rows={4} style={{ borderRadius: 10 }}></textarea>
+                <textarea 
+                  name="message" 
+                  className="form-control" 
+                  placeholder="Message" 
+                  rows={4} 
+                  style={{ borderRadius: 10 }}
+                  required
+                ></textarea>
               </div>
               <div className="d-grid">
-                <button type="submit" className="btn btn-primary btn-lg" style={{ background: '#004B87', border: 'none', borderRadius: 10, fontWeight: 600 }}>Send</button>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary btn-lg" 
+                  style={{ 
+                    background: '#004B87', 
+                    border: 'none', 
+                    borderRadius: 10, 
+                    fontWeight: 600 
+                  }}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send'}
+                </button>
               </div>
             </form>
             <p className="text-center mt-4 mb-0" style={{ color: '#222' }}>
