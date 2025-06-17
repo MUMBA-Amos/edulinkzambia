@@ -1,24 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './components/Header';
+import Homepage from './components/Homepage';
+import Services from './components/Services';
+import SuccessStories from './components/SuccessStories';
+import AboutUs from './components/AboutUs';
+import Contact from './components/Contact';
+import Partners from './components/Partners';
+import Footer from './components/Footer';
 
 function App() {
+  useEffect(() => {
+    // Handle hash navigation when page loads
+    if (window.location.hash) {
+      const sectionId = window.location.hash.substring(1);
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={
+            <>
+              <div id="homepage">
+                <Homepage />
+              </div>
+              <div id="about">
+                <AboutUs />
+              </div>
+              <div id="services">
+                <Services />
+              </div>
+              <div id="success-stories">
+                <SuccessStories />
+              </div>
+              <div id="contact-section">
+                <Contact />
+              </div>
+            </>
+          } />
+          <Route path="/partners" element={<Partners />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
