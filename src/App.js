@@ -28,28 +28,30 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        <Routes>
-          <Route path="/" element={
-            <>
-              <div id="homepage">
-                <Homepage />
-              </div>
-              <div id="about">
-                <AboutUs />
-              </div>
-              <div id="services">
-                <Services />
-              </div>
-              <div id="success-stories">
-                <SuccessStories />
-              </div>
-              <div id="contact-section">
-                <Contact />
-              </div>
-            </>
-          } />
-          <Route path="/partners" element={<Partners />} />
-        </Routes>
+        <div style={{ paddingTop: '258px' }}>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <div id="homepage">
+                  <Homepage />
+                </div>
+                <div id="about">
+                  <AboutUs />
+                </div>
+                <div id="services">
+                  <Services />
+                </div>
+                <div id="success-stories">
+                  <SuccessStories />
+                </div>
+                <div id="contact-section">
+                  <Contact />
+                </div>
+              </>
+            } />
+            <Route path="/partners" element={<Partners />} />
+          </Routes>
+        </div>
         <Footer />
       </div>
     </Router>
